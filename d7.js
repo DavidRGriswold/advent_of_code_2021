@@ -1,11 +1,15 @@
-const { debug } = require('console');
 const fs = require('fs');
-const {
-  performance
-} = require('perf_hooks');
+const { performance } = require('perf_hooks');
 
 fs.readFile('d7input.txt','utf-8',(err,data) => {
-    if (err) return;    
+    if (!err) process(data);   
+});
+
+/** Process the data
+ * @param {string} data 
+ */
+function process(data) {
+     
     let vals = data.split(",").map(Number).sort((a,b)=>a-b); 
 
     //Naive implementation, doesn't think about the math
@@ -19,8 +23,7 @@ fs.readFile('d7input.txt','utf-8',(err,data) => {
     part1v2(vals);
     part2v2(vals);
     console.log("Mathy version took " + (performance.now()-t1) + "ms for both");
-    
-});
+}
 
 /**
  * Naive implementation of part 1
@@ -82,8 +85,11 @@ function part1v2(vals) {
  */
 function part2v2(vals) {
     let sum = vals.reduce((a,b)=>a+b);
-    let mean = Math.floor(sum/vals.length);
-    console.log(vals.reduce((a,b)=>a+triangle(Math.abs(b-mean))));
+    let mean1 = Math.floor(sum/vals.length);
+    let mean2 = mean1+1;
+    let floorOption = vals.reduce((a,b)=>a+triangle(Math.abs(b-mean1)));
+    let ceilOption = vals.reduce((a,b)=>a+triangle(Math.abs(b-mean2)))
+    console.log(Math.min(floorOption,ceilOption));
 }
 /**
  * triangle number helper function
