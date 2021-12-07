@@ -1,26 +1,37 @@
 const { debug } = require('console');
 const fs = require('fs');
+const {
+  performance
+} = require('perf_hooks');
 
 fs.readFile('d7input.txt','utf-8',(err,data) => {
     if (err) {
         console.log(err);
         return;
     }
-    part1(data);
-    part2(data);
+    let vals = data.split(",").map((v)=>{return Number(v.trim())});
+    vals.sort((a,b)=>a-b)
+    
+    let t0 = performance.now();
+    part1(vals);
+    let t1 = performance.now();
+
+    part2(vals);
+    let t2 = performance.now();
+    console.log(`part 1: ${t1-t0} ms`);
+    console.log(`part 2: ${t2-t1} ms`);
     
 });
 
 /**
  * 
- * @param {string} input 
+ * @param {number[]} vals
  */
-function part1(input) {
-    let vals = input.split(",").map((v)=>{return Number(v.trim())});
-
-    let min = vals.reduce((a,b)=>{return(Math.min(a,b))});
-    let max = vals.reduce((a,b)=>{return(Math.max(a,b))});
+function part1(vals) {
    
+    let min = vals[0];
+    let max = vals[vals.length-1];
+
     let found = false;
     let pivot = Math.floor((max+min)/2);
     let center;
@@ -51,12 +62,14 @@ function part1(input) {
 
     
 }
-
-function part2(input) {
-    let vals = input.split(",").map((v)=>{return Number(v.trim())});
-
-    let min = vals.reduce((a,b)=>{return(Math.min(a,b))});
-    let max = vals.reduce((a,b)=>{return(Math.max(a,b))});
+/**
+ * 
+ * @param {number[]} vals 
+ */
+function part2(vals) {
+    
+    let min = vals[0];
+    let max = vals[vals.length-1];
    
     // create an array of triangle numbers rather than recalculating each time
     let triangles = [0];
