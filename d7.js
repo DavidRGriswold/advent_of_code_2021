@@ -17,8 +17,7 @@ fs.readFile('d7input.txt','utf-8',(err,data) => {
  */
 function part1(input) {
     let vals = input.split(",").map((v)=>{return Number(v.trim())});
-    //probably pretty inefficient...
-    vals.sort();
+
     let min = vals.reduce((a,b)=>{return(Math.min(a,b))});
     let max = vals.reduce((a,b)=>{return(Math.max(a,b))});
    
@@ -26,6 +25,8 @@ function part1(input) {
     let pivot = Math.floor((max+min)/2);
     let center;
     while(!found) {
+        // take advantage of the fact that being further from the
+        // best point will consistently get larger and larger
         let left = 0, right = 0;
         center = 0;
         for (let i = 0; i< vals.length; i++) {
@@ -51,17 +52,13 @@ function part1(input) {
     
 }
 
-/**
- * 
- * @param {string} input 
- */
 function part2(input) {
     let vals = input.split(",").map((v)=>{return Number(v.trim())});
 
     let min = vals.reduce((a,b)=>{return(Math.min(a,b))});
     let max = vals.reduce((a,b)=>{return(Math.max(a,b))});
    
-    // create an array of triangle numbers
+    // create an array of triangle numbers rather than recalculating each time
     let triangles = [0];
     for (let i = 1; i <=max;i++) {
         triangles[i]=triangles[i-1]+i;
@@ -73,11 +70,9 @@ function part2(input) {
         let left = 0, right = 0;
         center = 0;
         for (let i = 0; i< vals.length; i++) {
-            
             left += triangles[Math.abs(vals[i] - (pivot-1))];
             center += triangles[Math.abs(vals[i]-pivot)];
-            right += triangles[Math.abs(vals[i]-(pivot+1))];
-            
+            right += triangles[Math.abs(vals[i]-(pivot+1))]; 
         }
         if (left >= center && right >= center) {
             //we have found it! center is min.
@@ -93,4 +88,6 @@ function part2(input) {
         }
     }
     console.log(center);
+
+    
 }
